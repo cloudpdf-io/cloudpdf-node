@@ -75,7 +75,7 @@ export default class Api {
     })
   }
 
-  public async put<ResponseType, RequestParams>(functionName: string, url: string, params: RequestParams | {} = {}): Promise<ResponseType> {
+  public async put<ResponseType, RequestParams = {}>(functionName: string, url: string, params: RequestParams | {} = {}): Promise<ResponseType> {
     return axios.put(`${this.baseUrl}${url}`, params, {
       headers: this.getHeaders(functionName, params)
     }).then(response => {
@@ -85,7 +85,7 @@ export default class Api {
     })
   }
 
-  public async patch<ResponseType, RequestParams>(functionName: string, url: string, params: RequestParams | {} = {}): Promise<ResponseType> {
+  public async patch<ResponseType, RequestParams = {}>(functionName: string, url: string, params: RequestParams | {} = {}): Promise<ResponseType> {
     return axios.patch(`${this.baseUrl}${url}`, params, {
       headers: this.getHeaders(functionName, params)
     }).then(response => {
@@ -95,7 +95,7 @@ export default class Api {
     })
   }
 
-  public async post<ResponseType, RequestParams>(functionName: string, url: string, params: RequestParams | {} = {}): Promise<ResponseType> {
+  public async post<ResponseType, RequestParams = {}>(functionName: string, url: string, params: RequestParams | {} = {}): Promise<ResponseType> {
     return axios.post(`${this.baseUrl}${url}`, params, {
       headers: this.getHeaders(functionName, params)
     }).then(response => {
@@ -105,16 +105,17 @@ export default class Api {
     })
   }
 
-  public async uploadFromFilePath(preSignedURL:string, filePath: string, onUploadProgress?: (percentage: number) => void) {
-    return axios.put(preSignedURL, fs.readFileSync(filePath), {
+  public async uploadBufferOrPath(preSignedURL:string, bufferOrString: Buffer | string) {
+    let buffer: Buffer;
+    if(typeof bufferOrString === 'string') {
+      buffer = fs.readFileSync(bufferOrString)
+    } else {
+      buffer = bufferOrString;
+    }
+
+    return axios.put(preSignedURL, buffer, {
       headers: {
         'Content-Type': 'application/pdf'
-      },
-      onUploadProgress: (e) => {
-        //  Show progress
-        console.log(e);
-        const percentComplete = Math.round((e.loaded * 100) / e.total);
-        onUploadProgress && onUploadProgress(percentComplete)
       }
     }).then(response => {
       return response;
