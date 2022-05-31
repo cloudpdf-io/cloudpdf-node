@@ -199,6 +199,15 @@ export class CloudPDF {
       uploadCompleted: true
     });
   }
+
+  public async getDocumentFile(documentId: string, fileId: string): Promise<IFileResponse> {
+    return this.api.get<
+      IFileResponse
+    >('APIV2GetDocumentFile', `/documents/${documentId}/files/${fileId}`, {
+      id: documentId,
+      fileId
+    });
+  }
  
   public async uploadDocument(
     bufferOrPath: string | Buffer, 
