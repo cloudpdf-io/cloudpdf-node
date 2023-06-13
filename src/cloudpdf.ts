@@ -2,11 +2,23 @@ import Api from "./api";
 
 const API_ENDPOINT = "https://api.cloudpdf.io/v2";
 
+export type TWatermarkType = 'diagonal' | 'headerLeft' | 'headerCenter' | 'headerRight' | 'footerLeft' | 'footerCenter' | 'footerRight';
+
+export interface IWatermarkParams {
+  fontSize: number;
+  fontFamily: string;
+  color: string;
+  opacity: number;
+  text: string;
+  type: TWatermarkType;
+}
+
 interface IDefaultPermissionsParams {
   download?: "NotAllowed" | "Allowed" | "EmailRequired";
   search?: boolean;
   selection?: boolean;
-  info?: ("email" | "name" | "organization" | "phone")[]
+  info?: ("email" | "name" | "organization" | "phone")[];
+  watermarks?: IWatermarkParams[];
 }
 
 interface IGetViewerTokenParams extends IDefaultPermissionsParams {
